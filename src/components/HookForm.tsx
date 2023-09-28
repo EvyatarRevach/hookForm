@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
+import { FormControl, TextField, Button } from '@mui/material';
 
 interface FormData {
     userName: string;
@@ -28,75 +28,110 @@ function HookForm() {
         );
     };
 
-    console.log(errors);
-
     return (
-        <div>
+        <FormControl>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                    <label>UserName</label>
-                    <input
+                    <TextField
                         {...register('userName', { required: true, minLength: 2 })}
+                        label="UserName"
                         placeholder="Enter UserName"
+                        error={!!errors.userName}
+                        helperText={
+                            errors.userName
+                                ? 'UserName is required and must be at least 2 characters long.'
+                                : ''
+                        }
                     />
-                    {errors.userName && (
-                        <p>UserName is required and must be at least 2 characters long.</p>
-                    )}
                 </div>
 
                 <div>
-                    <label>Email</label>
-                    <input
+                    <TextField
                         {...register('email', {
                             required: true,
                             pattern: /\S+@\S+\.\S+/
                         })}
+                        label="Email"
                         placeholder="Enter Email"
+                        error={!!errors.email}
+                        helperText={
+                            errors.email
+                                ? 'Email is required and must be in the format text@text.text.'
+                                : ''
+                        }
                     />
-                    {errors.email && (
-                        <p>Email is required and must be in the format text@text.text.</p>
-                    )}
                 </div>
 
                 <div>
-                    <label>Password</label>
-                    <input
+                    <TextField
                         {...register('password', {
                             required: true,
                             validate: {
-                                uppercase: (value) => (/[A-Z]/.test(value) || 'Password must contain at least one uppercase letter'),
-                                lowercase: (value) => (/[a-z]/.test(value) || 'Password must contain at least one lowercase letter'),
-                                specialChar: (value) => (/[!@#$%^&*]/.test(value) || 'Password must contain at least one special character'),
-                                digit: (value) => (/\d/.test(value) || 'Password must contain at least one digit')                            }
+                                uppercase: (value) =>
+                                    /[A-Z]/.test(value) ||
+                                    'Password must contain at least one uppercase letter',
+                                lowercase: (value) =>
+                                    /[a-z]/.test(value) ||
+                                    'Password must contain at least one lowercase letter',
+                                specialChar: (value) =>
+                                    /[!@#$%^&*]/.test(value) ||
+                                    'Password must contain at least one special character',
+                                digit: (value) =>
+                                    /\d/.test(value) || 'Password must contain at least one digit'
+                            }
                         })}
+                        label="Password"
                         placeholder="Enter Password"
+                        error={!!errors.password}
+                        helperText={errors.password?.message}
                     />
-                    {errors.password && <p>{ errors.password.message}</p>}
                 </div>
 
                 <div>
-                    <label>Age</label>
-                    <input
+
+                    <TextField
                         {...register('age', { required: true })}
                         type="number"
+                        error={!!errors.age}
+                        helperText={errors.age && 'Age is required.'}
+                        label="Age"
                         placeholder="Enter Age"
+                    // InputLabelProps={{ shrink: true }}
+                    // InputProps={{
+                    //     inputProps: {
+                    //         min: 1,
+                    //         max: 120
+                    //     }
+                    // }}
+                    // variant="outlined"
+                    // fullWidth
                     />
-                    {errors.age && <p>Age is required.</p>}
                 </div>
 
                 <div>
-                    <label>Gender</label>
-                    <select {...register('gender', { required: true })}>
+                    <TextField
+                        {...register('gender', { required: true })}
+                        select
+                        label="Gender"
+                        defaultValue=""
+                        error={!!errors.gender}
+                        helperText={errors.gender && 'Gender is required.'}
+                        // variant="outlined"
+                        fullWidth
+
+
+                    >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
-                    </select>
-                    {errors.gender && <p>Gender is required.</p>}
+                    </TextField>
                 </div>
 
-                <input type="submit" />
+                <Button type="submit" variant="contained" color="primary">
+                    Submit
+                </Button>
             </form>
-        </div>
+        </FormControl>
     );
 }
 
